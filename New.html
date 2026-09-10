@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CryptoCuba Exchange</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #0f0f1a;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e1e2f, #2a2a3d);
+            padding: 20px 16px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #f0b90b;
+        }
+
+        header p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .contenido {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .seccion {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .seccion.activa {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tarjeta {
+            background: #1e1e2f;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #333;
+        }
+
+        .tarjeta h3 {
+            color: #f0b90b;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #0f0f1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #f0b90b;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        button:active {
+            background: #d4a30a;
+        }
+
+        .oferta {
+            background: #2a2a3d;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #444;
+        }
+
+        .oferta .info {
+            flex: 1;
+        }
+
+        .oferta .precio {
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .badge {
+            background: #444;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-around;
+            background: #1e1e2f;
+            border-top: 1px solid #333;
+            padding: 10px 0;
+            position: sticky;
+            bottom: 0;
+        }
+
+        footer button {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px;
+            border-radius: 8px;
+            width: 20%;
+            margin-top: 0;
+        }
+
+        footer button.activo {
+            color: #f0b90b;
+            background: #2a2a3d;
+        }
+
+        footer button span {
+            font-size: 18px;
+        }
+
+        #mensajeExito {
+            color: #4caf50;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .mensaje-simulacion {
+            background: #2a2a3d;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            color: #4caf50;
+            font-size: 14px;
+            display: none;
+        }
+
+        #errorWallet {
+            color: #ff4444;
+            font-size: 14px;
+            display: none;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ CryptoCuba Exchange</h1>
+        <p>Intercambia, invierte y gana criptomonedas entre cubanos</p>
+    </header>
+
+    <div class="contenido">
+        <!-- Sección Inicio -->
+        <div id="inicio" class="seccion activa">
+            <div class="tarjeta">
+                <h3>Bienvenido</h3>
+                <p>Esta es una mini app para intercambiar criptomonedas directamente entre usuarios. Pronto podrás:</p>
+                <ul style="margin-left:20px; margin-top:10px; color:#ccc;">
+                    <li>Publicar ofertas de compra/venta</li>
+                    <li>Conectar tu billetera (SafePal, MetaMask, etc.)</li>
+                    <li>Usar un contrato inteligente de custodia para mayor seguridad</li>
+                    <li>Bloquear activos para ganar intereses (staking)</li>
+                    <li>Adquirir contratos de minería en la nube</li>
+                </ul>
+            </div>
+            <div class="tarjeta">
+                <h3>Estado del proyecto</h3>
+                <p style="color:#4caf50;">✅ Mini app funcionando</p>
+                <p style="color:#f0b90b;">⏳ Próximamente: conexión de wallet y funcionalidades reales</p>
+            </div>
+        </div>
+
+        <!-- Sección Publicar oferta -->
+        <div id="publicar" class="seccion">
+            <div class="tarjeta">
+                <h3>📢 Publicar oferta</h3>
+                <p style="color:#aaa; font-size:14px;">(Por ahora es una demo visual)</p>
+                <label>Tipo de operación:</label>
+                <select id="tipoOperacion">
+                    <option value="venta">Vender</option>
+                    <option value="compra">Comprar</option>
+                </select>
+                <label>Criptomoneda:</label>
+                <select id="cripto">
+                    <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="USDT">USDT (TRC-20)</option>
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="LTC">Litecoin (LTC)</option>
+                </select>
+                <label>Cantidad:</label>
+                <input type="number" id="cantidad" placeholder="0.00">
+                <label>Precio por unidad (USD):</label>
+                <input type="number" id="precio" placeholder="0.00">
+                <label>Método de pago:</label>
+                <input type="text" id="metodoPago" placeholder="Ej: Transferencia móvil, efectivo...">
+                <button onclick="simularPublicacion()">Publicar oferta</button>
+                <p id="mensajeExito">✅ Oferta publicada (simulación)</p>
+            </div>
+        </div>
+
+        <!-- Sección Ofertas -->
+        <div id="ofertas" class="seccion">
+            <div class="tarjeta">
+                <h3>📋 Ofertas disponibles</h3>
+                <p style="color:#aaa; font-size:14px;">Estas son ofertas de ejemplo</p>
+            </div>
+            <div class="oferta">
+                <div class="info">
+                    <strong>Vendo 0.01 BTC</strong>
+                    <div><span class="badge">Pago: Transferencia</span></div>
+                </div>
+                <div class="precio">$450</div>
+            </div>
+            <div class="oferta">
+                <div class="info">
+                    <strong>Compro 500 USDT</strong>
+                    <div><span class="badge">Pago: Efectivo</span></div>
+                </div>
+                <div class="precio">$1.02</div>
+            </div>
+            <div class="oferta">
+                <div class="info">
+                    <strong>Vendo 0.5 ETH</strong>
+                    <div><span class="badge">Pago: Transferencia móvil</span></div>
+                </div>
+                <div class="precio">$1800</div>
+            </div>
+            <p style="color:#aaa; text-align:center; margin-top:15px;">Próximamente: ofertas reales desde blockchain</p>
+        </div>
+
+        <!-- Sección Ganar (Staking y Cloud Mining) -->
+        <div id="ganar" class="seccion">
+            <div class="tarjeta">
+                <h3>🔒 Staking (Bloqueo de activos)</h3>
+                <p style="color:#aaa; font-size:14px;">Bloquea tus criptomonedas y gana intereses pasivos</p>
+                <label>Cantidad a bloquear:</label>
+                <input type="number" id="montoStaking" placeholder="Ej: 100 USDT">
+                <label>Plazo:</label>
+                <select id="plazoStaking">
+                    <option value="30">30 días (5% anual)</option>
+                    <option value="60">60 días (7% anual)</option>
+                    <option value="90">90 días (10% anual)</option>
+                </select>
+                <div style="margin-top:10px; font-size:14px; color:#ccc;">
+                    Ganancia estimada: <span id="gananciaEstimada">0</span> USDT
+                </div>
+                <button onclick="simularStaking()">Bloquear activos</button>
+                <div id="mensajeStaking" class="mensaje-simulacion">✅ Activos bloqueados (simulación)</div>
+            </div>
+
+            <div class="tarjeta">
+                <h3>☁️ Minería en la nube</h3>
+                <p style="color:#aaa; font-size:14px;">Compra contratos de minería y recibe recompensas diarias</p>
+                <label>Plan:</label>
+                <select id="planMineria">
+                    <option value="bronce">Bronce - 10 TH/s - $50</option>
+                    <option value="plata">Plata - 50 TH/s - $200</option>
+                    <option value="oro">Oro - 100 TH/s - $350</option>
+                </select>
+                <label>Cantidad de contratos:</label>
+                <input type="number" id="cantidadContratos" value="1" min="1">
+                <div style="margin-top:10px; font-size:14px; color:#ccc;">
+                    Costo total: $<span id="costoTotal">50</span>
+                </div>
+                <button onclick="simularCloudMining()">Comprar contrato</button>
+                <div id="mensajeMineria" class="mensaje-simulacion">✅ Contrato adquirido (simulación)</div>
+            </div>
+        </div>
+
+        <!-- Sección Mi Wallet -->
+        <div id="wallet" class="seccion">
+            <div class="tarjeta">
+                <h3>👛 Vincular mi billetera</h3>
+                <p style="color:#aaa; font-size:14px;">Pega la dirección de tu billetera para recibir pagos.</p>
+                
+                <label>Criptomoneda:</label>
+                <select id="criptoWallet">
+                    <option value="USDT-BEP20">USDT (BEP-20)</option>
+                    <option value="USDT-TRC20">USDT (TRC-20)</option>
+                    <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="LTC">Litecoin (LTC)</option>
+                </select>
+                
+                <label>Dirección de billetera:</label>
+                <input type="text" id="direccionWallet" placeholder="Ej: 0x..." autocomplete="off">
+                
+                <button onclick="vincularWallet()">Vincular dirección</button>
+                <div id="walletVinculada" style="display:none; margin-top:15px;">
+                    <p style="color:#4caf50;">✅ Billetera vinculada:</p>
+                    <p id="direccionMostrada" style="background:#2a2a3d; padding:8px; border-radius:6px; word-break:break-all;"></p>
+                    <button onclick="desvincularWallet()" style="background:#666;">Desvincular</button>
+                </div>
+                <p id="errorWallet" style="color:#ff4444; font-size:14px; display:none;"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <button class="activo" onclick="mostrarSeccion('inicio', this)">
+            <span>🏠</span> Inicio
+        </button>
+        <button onclick="mostrarSeccion('publicar', this)">
+            <span>📢</span> Publicar
+        </button>
+        <button onclick="mostrarSeccion('ofertas', this)">
+            <span>📋</span> Ofertas
+        </button>
+        <button onclick="mostrarSeccion('ganar', this)">
+            <span>💰</span> Ganar
+        </button>
+        <button onclick="mostrarSeccion('wallet', this)">
+            <span>👛</span> Wallet
+        </button>
+    </footer>
+
+    <script>
+        // Función para cambiar de sección
+        function mostrarSeccion(idSeccion,boton) {
+            document.querySelectorAll('.seccion').forEach(seccion => {
+                seccion.classList.remove('activa');
+            });
+            document.getElementById(idSeccion).classList.add('activa');
+            
+            document.querySelectorAll('footer button').forEach(btn => {
+                btn.classList.remove('activo');
+            });
+            if (boton) boton.classList.add('activo');
+        }
+
+        // Simular publicación de oferta
+        function simularPublicacion() {
+            const tipo = document.getElementById('tipoOperacion').value;
+            const cripto = document.getElementById('cripto').value;
+            const cantidad = document.getElementById('cantidad').value;
+            const precio = document.getElementById('precio').value;
+            
+            if (!cantidad || !precio) {
+                alert('Por favor, completa cantidad y precio');
+                return;
+            }
+            
+            const mensaje = document.getElementById('mensajeExito');
+            mensaje.textContent = `✅ Oferta simulada: ${tipo} ${cantidad} ${cripto} a $${precio} USD`;
+            mensaje.style.display = 'block';
+            document.getElementById('cantidad').value = '';
+            document.getElementById('precio').value = '';
+        }
+
+        // Simular Staking
+        function simularStaking() {
+            const monto = parseFloat(document.getElementById('montoStaking').value);
+            if (!monto || monto <= 0) {
+                alert('Ingresa una cantidad válida');
+                return;
+            }
+            const plazo = document.getElementById('plazoStaking').value;
+            let tasa = 0.05;
+            if (plazo === '60') tasa = 0.07;
+            if (plazo === '90') tasa = 0.10;
+            
+            const ganancia = monto * tasa * (plazo / 365);
+            document.getElementById('mensajeStaking').textContent = `✅ Bloqueados ${monto} USDT por ${plazo} días. Ganancia estimada: ${ganancia.toFixed(2)} USDT`;
+            document.getElementById('mensajeStaking').style.display = 'block';
+        }
+
+        // Actualizar ganancia estimada en staking al cambiar valores
+        document.getElementById('montoStaking').addEventListener('input', actualizarGanancia);
+        document.getElementById('plazoStaking').addEventListener('change', actualizarGanancia);
+
+        function actualizarGanancia() {
+            const monto = parseFloat(document.getElementById('montoStaking').value) || 0;
+            const plazo = document.getElementById('plazoStaking').value;
+            let tasa = 0.05;
+            if (plazo === '60') tasa = 0.07;
+            if (plazo === '90') tasa = 0.10;
+            const ganancia = monto * tasa * (plazo / 365);
+            document.getElementById('gananciaEstimada').textContent = ganancia.toFixed(2);
+        }
+
+        // Simular Cloud Mining
+        function simularCloudMining() {
+            const plan = document.getElementById('planMineria').value;
+            const cantidad = parseInt(document.getElementById('cantidadContratos').value) || 1;
+            let costoUnitario = 50;
+            if (plan === 'plata') costoUnitario = 200;
+            if (plan === 'oro') costoUnitario = 350;
+            const total = costoUnitario * cantidad;
+            document.getElementById('mensajeMineria').textContent = `✅ Contrato(s) ${plan} x${cantidad} comprado(s). Costo total: $${total}`;
+            document.getElementById('mensajeMineria').style.display = 'block';
+        }
+
+        // Actualizar costo total en cloud mining
+        document.getElementById('planMineria').addEventListener('change', actualizarCosto);
+        document.getElementById('cantidadContratos').addEventListener('input', actualizarCosto);
+
+        function actualizarCosto() {
+            const plan = document.getElementById('planMineria').value;
+            const cantidad = parseInt(document.getElementById('cantidadContratos').value) || 1;
+            let costoUnitario = 50;
+            if (plan === 'plata') costoUnitario = 200;
+            if (plan === 'oro') costoUnitario = 350;
+            document.getElementById('costoTotal').textContent = (costoUnitario * cantidad).toFixed(2);
+        }
+
+        // --- Funciones para vincular billetera ---
+
+        function vincularWallet() {
+            const cripto = document.getElementById('criptoWallet').value;
+            const direccion = document.getElementById('direccionWallet').value.trim();
+            const errorElem = document.getElementById('errorWallet');
+            errorElem.style.display = 'none';
+            
+            if (!direccion) {
+                errorElem.textContent = 'Por favor, pega una dirección válida.';
+                errorElem.style.display = 'block';
+                return;
+            }
+            
+            // Validación básica según la criptomoneda
+            if (!validarDireccion(cripto, direccion)) {
+                errorElem.textContent = 'La dirección no tiene el formato correcto para ' + cripto + '.';
+                errorElem.style.display = 'block';
+                return;
+            }
+            
+            // Guardar en localStorage
+            const walletData = {
+                cripto: cripto,
+                direccion: direccion
+            };
+            localStorage.setItem('walletVinculada', JSON.stringify(walletData));
+            
+            // Mostrar en pantalla
+            document.getElementById('walletVinculada').style.display = 'block';
+            document.getElementById('direccionMostrada').textContent = cripto + ': ' + direccion;
+            document.getElementById('direccionWallet').value = '';
+        }
+
+        function desvincularWallet() {
+            localStorage.removeItem('walletVinculada');
+            document.getElementById('walletVinculada').style.display = 'none';
+            document.getElementById('direccionWallet').value = '';
+        }
+
+        function validarDireccion(cripto,direccion) {
+            if (cripto === 'BTC' || cripto === 'LTC') {
+                return /^(1|3|bc1|L|M|ltc1)[a-zA-Z0-9]{25,42}$/.test(direccion);
+            } else if (cripto === 'ETH' || cripto === 'USDT-BEP20') {
+                return /^0x[a-fA-F0-9]{40}$/.test(direccion);
+            } else if (cripto === 'USDT-TRC20') {
+                return /^T[a-zA-Z0-9]{33}$/.test(direccion);
+            }
+            return false;
+        }
+
+        // Al cargar la página, restaurar wallet si existe
+        window.addEventListener('load', function() {
+            const walletGuardada = localStorage.getItem('walletVinculada');
+            if (walletGuardada) {
+                const datos = JSON.parse(walletGuardada);
+                document.getElementById('walletVinculada').style.display = 'block';
+                document.getElementById('direccionMostrada').textContent = datos.cripto + ': ' + datos.direccion;
+                document.getElementById('criptoWallet').value = datos.cripto;
+            }
+        });
+    </script>
+</body>
+</html>
