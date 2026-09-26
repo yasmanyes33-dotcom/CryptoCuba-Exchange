@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Trinidad Rides — Horseback & Carretón Tours</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #0f1419; --card: #1a2028; --card2: #232b35;
+      --accent: #ffb547; --accent2: #ff8a3d;
+      --text: #e8edf2; --muted: #8b97a5;
+      --green: #4ade80; --border: #2a333f; --red: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding-bottom: 90px; font-size: 15px; line-height: 1.5;
+    }
+    .header {
+      background: linear-gradient(135deg, #ff8a3d 0%, #ffb547 100%);
+      padding: 20px 18px 22px; border-radius: 0 0 22px 22px; color: #1a1208;
+    }
+    .header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+    .header p { font-size: 13px; opacity: 0.85; margin-top: 2px; font-weight: 500; }
+    .badge {
+      display: inline-block; background: rgba(26,18,8,0.15);
+      padding: 4px 10px; border-radius: 20px; font-size: 11px;
+      font-weight: 700; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .container { padding: 18px; max-width: 520px; margin: 0 auto; }
+    .section-title {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted); margin: 20px 0 10px;
+    }
+    .tour-grid { display: grid; gap: 10px; }
+    .tour-card {
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: 16px; padding: 14px; cursor: pointer;
+      transition: all 0.15s ease; display: flex; align-items: center; gap: 12px;
+    }
+    .tour-card:active { transform: scale(0.98); }
+    .tour-card.selected {
+      border-color: var(--accent); background: var(--card2);
+      box-shadow: 0 0 0 3px rgba(255,181,71,0.15);
+    }
+    .tour-icon { font-size: 28px; flex-shrink: 0; }
+    .tour-info { flex: 1; }
+    .tour-info h3 { font-size: 15px; font-weight: 700; }
+    .tour-info p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .tour-price { font-size: 13px; font-weight: 800; color: var(--accent); white-space: nowrap; text-align: right; }
+    .tour-price small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+    .form-group { margin-bottom: 14px; }
+    label {
+      display: block; font-size: 12px; font-weight: 600; color: var(--muted);
+      margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    input, select, textarea {
+      width: 100%; background: var(--card); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 12px 14px; color: var(--text);
+      font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.15s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 70px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kids-hint { font-size: 11px; color: var(--green); margin-top: 4px; font-style: italic; }
+    .pay-card {
+      background: linear-gradient(160deg, #1e2630 0%, #171d24 100%);
+      border: 1.5px solid var(--border); border-radius: 18px;
+      padding: 20px; margin-top: 6px;
+    }
+    .pay-net {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(74,222,128,0.12); color: var(--green);
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .pay-amount {
+      font-size: 36px; font-weight: 800; letter-spacing: -1px;
+      color: var(--text); line-height: 1;
+    }
+    .pay-amount small { font-size: 16px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+    .pay-usd { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .pay-divider { border-top: 1px dashed var(--border); margin: 16px 0; }
+    .pay-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .pay-address {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px; word-break: break-all; color: var(--accent);
+      background: rgba(0,0,0,0.3); padding: 10px 12px;
+      border-radius: 10px; border: 1px solid var(--border);
+    }
+    .btn-wallet {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; background: var(--card2); color: var(--text);
+      border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 13px; font-size: 14px; font-weight: 700;
+      text-decoration: none; margin-top: 14px; cursor: pointer;
+    }
+    .btn-wallet:active { background: var(--card); }
+    .btn-copy {
+      background: transparent; border: none; color: var(--accent);
+      font-size: 12px; font-weight: 700; margin-top: 8px;
+      cursor: pointer; padding: 4px 0;
+    }
+    .price-breakdown {
+      background: var(--card); border: 1.5px dashed var(--border);
+      border-radius: 14px; padding: 14px; margin-top: 6px;
+    }
+    .price-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+    .price-row.total {
+      border-top: 1px solid var(--border); margin-top: 6px;
+      padding-top: 10px; font-weight: 800; font-size: 16px;
+    }
+    .price-row .label-now { color: var(--accent); font-weight: 700; }
+    .price-row .label-later { color: var(--green); font-weight: 700; }
+    .price-row.sub { font-size: 12px; color: var(--muted); padding: 2px 0; }
+    .price-hint {
+      font-size: 11px; color: var(--muted); margin-top: 10px;
+      padding-top: 10px; border-top: 1px dashed var(--border); line-height: 1.5;
+    }
+    .cta {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      padding: 14px 18px 20px;
+      background: linear-gradient(to top, var(--bg) 70%, transparent); z-index: 10;
+    }
+    .cta button {
+      width: 100%; max-width: 520px; margin: 0 auto; display: block;
+      background: linear-gradient(135deg, #ff8a3d 0%, #ffb547 100%);
+      color: #1a1208; border: none; border-radius: 14px; padding: 16px;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      transition: transform 0.1s; letter-spacing: 0.3px;
+    }
+    .cta button:active { transform: scale(0.97); }
+    .cta button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .success { text-align: center; padding: 40px 18px; }
+    .success .check { font-size: 64px; margin-bottom: 14px; }
+    .success h2 { font-size: 22px; margin-bottom: 10px; }
+    .success p { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+    .success .info-card {
+      background: var(--card); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 16px; text-align: left; margin-top: 16px;
+    }
+    .success .info-card .row-line {
+      display: flex; justify-content: space-between; padding: 6px 0;
+      font-size: 13px; border-bottom: 1px solid var(--border);
+    }
+    .success .info-card .row-line:last-child { border-bottom: none; }
+    .success .info-card .row-line span:first-child { color: var(--muted); }
+    .success .info-card .row-line span:last-child { font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- VIEW 1: FORM -->
+  <div id="view-form" class="view active">
+    <div class="header">
+      <h1>🐎 Trinidad Rides</h1>
+      <p>Horseback & Carretón Tours — Trinidad, Cuba</p>
+      <span class="badge">Local guides · Kids 50% off</span>
+    </div>
+    <div class="container">
+      <div class="section-title">1. Choose your tour</div>
+      <div class="tour-grid" id="tour-grid">
+        <div class="tour-card" data-tour="Horseback to the Mountains" data-price="10" data-type="per-person" data-deposit="50">
+          <div class="tour-icon">🐎</div>
+          <div class="tour-info">
+            <h3>Horseback to the Mountains</h3>
+            <p>Topes de Collantes · waterfall · coffee farm</p>
+          </div>
+          <div class="tour-price">$10<small>per person</small></div>
+        </div>
+        <div class="tour-card" data-tour="Horseback Valley of the Mills" data-price="20" data-type="per-person" data-deposit="50">
+          <div class="tour-icon">🌾</div>
+          <div class="tour-info">
+            <h3>Horseback — Valley of the Mills</h3>
+            <p>Valle de los Ingenios · sugar mill ruins</p>
+          </div>
+          <div class="tour-price">$20<small>per person</small></div>
+        </div>
+        <div class="tour-card" data-tour="Carretón City Tour" data-price="20" data-type="rental" data-deposit="25">
+          <div class="tour-icon">🐴</div>
+          <div class="tour-info">
+            <h3>Carretón — City Tour</h3>
+            <p>Trinidad old town · 1.5 hours</p>
+          </div>
+          <div class="tour-price">$20<small>per tour</small></div>
+        </div>
+        <div class="tour-card" data-tour="Carretón Sunset Ride" data-price="40" data-type="rental" data-deposit="25">
+          <div class="tour-icon">🌅</div>
+          <div class="tour-info">
+            <h3>Carretón — Sunset Ride</h3>
+            <p>La Popa viewpoint · golden hour</p>
+          </div>
+          <div class="tour-price">$40<small>per tour</small></div>
+        </div>
+      </div>
+
+      <div class="section-title">2. Your details</div>
+      <div class="form-group">
+        <label>Full name</label>
+        <input type="text" id="name" placeholder="e.g. John Smith" />
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="date" />
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label>Adults</label>
+          <input type="number" id="adults" min="1" max="10" value="2" />
+        </div>
+        <div class="form-group">
+          <label>Kids (50% off)</label>
+          <input type="number" id="kids" min="0" max="10" value="0" />
+        </div>
+      </div>
+      <div class="kids-hint" id="kids-hint"></div>
+      <div class="form-group" style="margin-top:14px;">
+        <label>Language preferred</label>
+        <select id="language">
+          <option value="English">English</option>
+          <option value="Spanish">Español</option>
+          <option value="French">Français</option>
+          <option value="German">Deutsch</option>
+          <option value="Italian">Italiano</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Anything else? (optional)</label>
+        <textarea id="notes" placeholder="Hotel pickup, dietary needs, special requests..."></textarea>
+      </div>
+    </div>
+    <div class="cta">
+      <button id="btn-continue" disabled>Select a tour to continue</button>
+    </div>
+  </div>
+
+  <!-- VIEW 2: PAYMENT -->
+  <div id="view-payment" class="view">
+    <div class="header">
+      <h1>💎 Secure your booking</h1>
+      <p>Complete the deposit to confirm your tour</p>
+    </div>
+    <div class="container">
+      <div class="section-title">Booking summary</div>
+      <div class="price-breakdown">
+        <div class="price-row sub" id="s-tour"></div>
+        <div class="price-row sub" id="s-adults"></div>
+        <div class="price-row sub" id="s-kids" style="display:none;"></div>
+        <div class="price-row total">
+          <span>Total</span>
+          <span id="s-total">$0</span>
+        </div>
+        <div class="price-row" style="margin-top:8px;">
+          <span class="label-now" id="s-label-now">💎 Deposit now (USDT)</span>
+          <span class="label-now" id="s-deposit">$0</span>
+        </div>
+        <div class="price-row">
+          <span class="label-later">💵 Cash at the end</span>
+          <span class="label-later" id="s-cash">$0</span>
+        </div>
+        <div class="price-hint">
+          💡 Tip not included — leave it at the end if you're happy with the service.
+        </div>
+      </div>
+
+      <div class="section-title">Pay the deposit</div>
+      <div class="pay-card">
+        <div class="pay-net">● TRC20 · Tron Network</div>
+        <div class="pay-amount" id="p-amount">0 <small>USDT</small></div>
+        <div class="pay-usd" id="p-usd">≈ $0.00 USD</div>
+        <div class="pay-divider"></div>
+        <div class="pay-label">Send to this address</div>
+        <div class="pay-address" id="p-address">TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH</div>
+        <button class="btn-copy" id="btn-copy-1">📋 Copy address</button>
+
+        <a class="btn-wallet" href="https://tronscan.org/#/address/TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH" target="_blank">
+          🔍 Verify address on Tronscan
+        </a>
+        <a class="btn-wallet" href="https://www.safepal.com/download" target="_blank" style="margin-top:10px;">
+          💼 Get SafePal Wallet
+        </a>
+        <div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">
+          No wallet yet? Install SafePal, create a wallet, buy USDT (TRC20),
+          then send the exact amount to the address above.
+        </div>
+      </div>
+
+      <div style="font-size:12px;color:var(--muted);margin-top:16px;line-height:1.6;">
+        After sending the payment, tap the button below. We'll verify the transaction
+        and confirm your booking within 1 hour.
+      </div>
+    </div>
+    <div class="cta">
+      <button id="btn-sent" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: #052e16;">
+        ✅ I've sent the payment
+      </button>
+    </div>
+  </div>
+
+  <!-- VIEW 3: SUCCESS -->
+  <div id="view-success" class="view">
+    <div class="success">
+      <div class="check">🎉</div>
+      <h2>Thank you!</h2>
+      <p>Your reservation request and payment claim have been received.<br>
+         We're verifying the transaction — you'll get a confirmation here shortly.</p>
+      <div class="info-card">
+        <div class="row-line"><span>Tour</span><span id="c-tour">—</span></div>
+        <div class="row-line"><span>Date</span><span id="c-date">—</span></div>
+        <div class="row-line"><span>Adults</span><span id="c-adults">—</span></div>
+        <div class="row-line"><span>Kids</span><span id="c-kids">—</span></div>
+        <div class="row-line"><span>Total</span><span id="c-total">—</span></div>
+        <div class="row-line"><span>Paid now</span><span id="c-deposit">—</span></div>
+        <div class="row-line"><span>Cash at end</span><span id="c-cash">—</span></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:20px;">
+        You can close this window. We'll message you on Telegram.
+      </p>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var tg = null;
+    if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
+      tg = window.Telegram.WebApp;
+      try {
+        if (tg.ready) tg.ready();
+        if (tg.expand) tg.expand();
+      } catch (e) {}
+    }
+
+    var WALLET = "TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH";
+    var selectedTour = null;
+    var lastBooking = null;
+
+    function el(id) { return document.getElementById(id); }
+
+    function setupTourCards() {
+      var cards = document.querySelectorAll('.tour-card');
+      for (var i = 0; i < cards.length; i++) {
+        (function(card) {
+          card.addEventListener('click', function() {
+            var all = document.querySelectorAll('.tour-card');
+            for (var j = 0; j < all.length; j++) {
+              all[j].classList.remove('selected');
+            }
+            card.classList.add('selected');
+            selectedTour = {
+              name: card.getAttribute('data-tour'),
+              price: parseFloat(card.getAttribute('data-price')),
+              type: card.getAttribute('data-type'),
+              deposit: parseFloat(card.getAttribute('data-deposit'))
+            };
+            validateForm();
+          });
+        })(cards[i]);
+      }
+    }
+
+    function validateForm() {
+      var name = el('name').value;
+      var date = el('date').value;
+      var adults = parseInt(el('adults').value) || 0;
+      var kids = parseInt(el('kids').value) || 0;
+      var btn = el('btn-continue');
+
+      var kh = el('kids-hint');
+      if (selectedTour && selectedTour.type === 'per-person' && kids > 0) {
+        kh.textContent = '🧒 Kids save $' + (kids * selectedTour.price / 2).toFixed(2) + ' with the 50% discount';
+      } else {
+        kh.textContent = '';
+      }
+
+      var ok = selectedTour && name && name.trim() !== '' && date && adults > 0;
+      btn.disabled = !ok;
+      btn.textContent = !selectedTour ? 'Select a tour to continue' : 'Continue to payment';
+    }
+
+    function goToPayment() {
+      var adults = parseInt(el('adults').value) || 0;
+      var kids = parseInt(el('kids').value) || 0;
+
+      var total = 0, adultsSubtotal = 0, kidsSubtotal = 0;
+      if (selectedTour.type === 'per-person') {
+        adultsSubtotal = adults * selectedTour.price;
+        kidsSubtotal = kids * (selectedTour.price / 2);
+        total = adultsSubtotal + kidsSubtotal;
+      } else {
+        total = selectedTour.price;
+      }
+
+      var depositPct = selectedTour.deposit / 100;
+      var deposit = total * depositPct;
+      var cash = total - deposit;
+
+      lastBooking = {
+        tour: selectedTour.name,
+        name: el('name').value.trim(),
+        date: el('date').value,
+        adults: adults,
+        kids: kids,
+        language: el('language').value,
+        notes: el('notes').value.trim(),
+        total: parseFloat(total.toFixed(2)),
+        deposit_pct: selectedTour.deposit,
+        deposit_amount: parseFloat(deposit.toFixed(2)),
+        cash_amount: parseFloat(cash.toFixed(2))
+      };
+
+      el('s-tour').textContent = '🐎 ' + selectedTour.name;
+      if (selectedTour.type === 'per-person') {
+        el('s-adults').textContent = '👤 ' + adults + ' adult' + (adults !== 1 ? 's' : '') + ' × $' + selectedTour.price + ' = $' + adultsSubtotal.toFixed(2);
+        if (kids > 0) {
+          el('s-kids').style.display = 'flex';
+          el('s-kids').textContent = '🧒 ' + kids + ' kid' + (kids !== 1 ? 's' : '') + ' × $' + (selectedTour.price / 2).toFixed(2) + ' = $' + kidsSubtotal.toFixed(2);
+        } else {
+          el('s-kids').style.display = 'none';
+        }
+      } else {
+        el('s-adults').textContent = '🐴 Private rental (fixed price)';
+        el('s-kids').style.display = 'none';
+      }
+      el('s-total').textContent = '$' + total.toFixed(2);
+      el('s-label-now').textContent = '💎 Deposit now (USDT) — ' + selectedTour.deposit + '%';
+      el('s-deposit').textContent = '$' + deposit.toFixed(2);
+      el('s-cash').textContent = '$' + cash.toFixed(2);
+
+      el('p-amount').innerHTML = deposit.toFixed(2) + ' <small>USDT</small>';
+      el('p-usd').textContent = '≈ $' + deposit.toFixed(2) + ' USD';
+      el('p-address').textContent = WALLET;
+
+      el('view-form').classList.remove('active');
+      el('view-payment').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function paymentSent() {
+      lastBooking.status = 'payment_claimed';
+      lastBooking.claimed_at = new Date().toISOString();
+
+      if (tg && tg.sendData) {
+        tg.sendData(JSON.stringify(lastBooking));
+      } else {
+        console.log('Booking (web mode):', lastBooking);
+      }
+
+      el('c-tour').textContent = lastBooking.tour;
+      el('c-date').textContent = lastBooking.date;
+      el('c-adults').textContent = lastBooking.adults;
+      el('c-kids').textContent = lastBooking.kids;
+      el('c-total').textContent = '$' + lastBooking.total.toFixed(2);
+      el('c-deposit').textContent = '$' + lastBooking.deposit_amount.toFixed(2) + ' USDT';
+      el('c-cash').textContent = '$' + lastBooking.cash_amount.toFixed(2);
+
+      el('view-payment').classList.remove('active');
+      el('view-success').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function copyWallet() {
+      var done = function() {
+        var b = el('btn-copy-1');
+        b.textContent = '✅ Copied!';
+        setTimeout(function() { b.textContent = '📋 Copy address'; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(WALLET).then(done).catch(function() {
+          legacyCopy(); done();
+        });
+      } else {
+        legacyCopy(); done();
+      }
+    }
+
+    function legacyCopy() {
+      var temp = document.createElement('textarea');
+      temp.value = WALLET;
+      temp.style.position = 'fixed';
+      temp.style.opacity = '0';
+      document.body.appendChild(temp);
+      temp.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(temp);
+    }
+
+    function init() {
+      setupTourCards();
+      el('btn-continue').addEventListener('click', goToPayment);
+      el('btn-sent').addEventListener('click', paymentSent);
+      el('btn-copy-1').addEventListener('click', copyWallet);
+      var inputs = ['adults', 'kids', 'name', 'date'];
+      for (var k = 0; k < inputs.length; k++) {
+        el(inputs[k]).addEventListener('input', validateForm);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
+</body>
+</html>
