@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Trinidad Rides — Horseback & Carretón Tours</title>
+  <title>Trinidad Rides</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       --bg: #0f1419; --card: #1a2028; --card2: #232b35;
-      --accent: #ffb547; --accent2: #ff8a3d;
-      --text: #e8edf2; --muted: #8b97a5;
-      --green: #4ade80; --border: #2a333f; --red: #f87171;
+      --accent: #ffb547; --text: #e8edf2; --muted: #8b97a5;
+      --green: #4ade80; --border: #2a333f;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
@@ -65,51 +64,12 @@
     input, select, textarea {
       width: 100%; background: var(--card); border: 1.5px solid var(--border);
       border-radius: 12px; padding: 12px 14px; color: var(--text);
-      font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.15s;
+      font-size: 15px; font-family: inherit; outline: none;
     }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); }
     textarea { resize: vertical; min-height: 70px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .kids-hint { font-size: 11px; color: var(--green); margin-top: 4px; font-style: italic; }
-    .pay-card {
-      background: linear-gradient(160deg, #1e2630 0%, #171d24 100%);
-      border: 1.5px solid var(--border); border-radius: 18px;
-      padding: 20px; margin-top: 6px;
-    }
-    .pay-net {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(74,222,128,0.12); color: var(--green);
-      padding: 4px 10px; border-radius: 20px;
-      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
-      text-transform: uppercase; margin-bottom: 14px;
-    }
-    .pay-amount {
-      font-size: 36px; font-weight: 800; letter-spacing: -1px;
-      color: var(--text); line-height: 1;
-    }
-    .pay-amount small { font-size: 16px; font-weight: 600; color: var(--muted); margin-left: 4px; }
-    .pay-usd { font-size: 13px; color: var(--muted); margin-top: 4px; }
-    .pay-divider { border-top: 1px dashed var(--border); margin: 16px 0; }
-    .pay-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .pay-address {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 12px; word-break: break-all; color: var(--accent);
-      background: rgba(0,0,0,0.3); padding: 10px 12px;
-      border-radius: 10px; border: 1px solid var(--border);
-    }
-    .btn-wallet {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; background: var(--card2); color: var(--text);
-      border: 1.5px solid var(--border); border-radius: 12px;
-      padding: 13px; font-size: 14px; font-weight: 700;
-      text-decoration: none; margin-top: 14px; cursor: pointer;
-    }
-    .btn-wallet:active { background: var(--card); }
-    .btn-copy {
-      background: transparent; border: none; color: var(--accent);
-      font-size: 12px; font-weight: 700; margin-top: 8px;
-      cursor: pointer; padding: 4px 0;
-    }
     .price-breakdown {
       background: var(--card); border: 1.5px dashed var(--border);
       border-radius: 14px; padding: 14px; margin-top: 6px;
@@ -122,10 +82,6 @@
     .price-row .label-now { color: var(--accent); font-weight: 700; }
     .price-row .label-later { color: var(--green); font-weight: 700; }
     .price-row.sub { font-size: 12px; color: var(--muted); padding: 2px 0; }
-    .price-hint {
-      font-size: 11px; color: var(--muted); margin-top: 10px;
-      padding-top: 10px; border-top: 1px dashed var(--border); line-height: 1.5;
-    }
     .cta {
       position: fixed; bottom: 0; left: 0; right: 0;
       padding: 14px 18px 20px;
@@ -136,27 +92,11 @@
       background: linear-gradient(135deg, #ff8a3d 0%, #ffb547 100%);
       color: #1a1208; border: none; border-radius: 14px; padding: 16px;
       font-size: 16px; font-weight: 800; cursor: pointer;
-      transition: transform 0.1s; letter-spacing: 0.3px;
     }
     .cta button:active { transform: scale(0.97); }
-    .cta button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .cta button:disabled { opacity: 0.4; cursor: not-allowed; }
     .view { display: none; }
     .view.active { display: block; }
-    .success { text-align: center; padding: 40px 18px; }
-    .success .check { font-size: 64px; margin-bottom: 14px; }
-    .success h2 { font-size: 22px; margin-bottom: 10px; }
-    .success p { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
-    .success .info-card {
-      background: var(--card); border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 16px; text-align: left; margin-top: 16px;
-    }
-    .success .info-card .row-line {
-      display: flex; justify-content: space-between; padding: 6px 0;
-      font-size: 13px; border-bottom: 1px solid var(--border);
-    }
-    .success .info-card .row-line:last-child { border-bottom: none; }
-    .success .info-card .row-line span:first-child { color: var(--muted); }
-    .success .info-card .row-line span:last-child { font-weight: 700; }
   </style>
 </head>
 <body>
@@ -239,7 +179,7 @@
       </div>
       <div class="form-group">
         <label>Anything else? (optional)</label>
-        <textarea id="notes" placeholder="Hotel pickup, dietary needs, special requests..."></textarea>
+        <textarea id="notes" placeholder="Hotel pickup, dietary needs..."></textarea>
       </div>
     </div>
     <div class="cta">
@@ -271,64 +211,19 @@
           <span class="label-later">💵 Cash at the end</span>
           <span class="label-later" id="s-cash">$0</span>
         </div>
-        <div class="price-hint">
-          💡 Tip not included — leave it at the end if you're happy with the service.
-        </div>
       </div>
-
       <div class="section-title">Pay the deposit</div>
-      <div class="pay-card">
-        <div class="pay-net">● TRC20 · Tron Network</div>
-        <div class="pay-amount" id="p-amount">0 <small>USDT</small></div>
-        <div class="pay-usd" id="p-usd">≈ $0.00 USD</div>
-        <div class="pay-divider"></div>
-        <div class="pay-label">Send to this address</div>
-        <div class="pay-address" id="p-address">TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH</div>
-        <button class="btn-copy" id="btn-copy-1">📋 Copy address</button>
-
-        <a class="btn-wallet" href="https://tronscan.org/#/address/TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH" target="_blank">
-          🔍 Verify address on Tronscan
-        </a>
-        <a class="btn-wallet" href="https://www.safepal.com/download" target="_blank" style="margin-top:10px;">
-          💼 Get SafePal Wallet
-        </a>
-        <div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6;">
-          No wallet yet? Install SafePal, create a wallet, buy USDT (TRC20),
-          then send the exact amount to the address above.
-        </div>
-      </div>
-
-      <div style="font-size:12px;color:var(--muted);margin-top:16px;line-height:1.6;">
-        After sending the payment, tap the button below. We'll verify the transaction
-        and confirm your booking within 1 hour.
+      <div class="price-breakdown">
+        <div style="font-size:36px;font-weight:800;text-align:center;" id="p-amount">0 <small style="font-size:16px;">USDT</small></div>
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;margin-top:14px;">Send to this address (TRC20)</div>
+        <div style="font-family:monospace;font-size:12px;word-break:break-all;color:var(--accent);background:rgba(0,0,0,0.3);padding:10px;border-radius:10px;margin-top:6px;" id="p-address">TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH</div>
+        <button id="btn-copy-1" style="background:transparent;border:none;color:var(--accent);font-size:12px;font-weight:700;margin-top:8px;cursor:pointer;">📋 Copy address</button>
       </div>
     </div>
     <div class="cta">
       <button id="btn-sent" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: #052e16;">
         ✅ I've sent the payment
       </button>
-    </div>
-  </div>
-
-  <!-- VIEW 3: SUCCESS -->
-  <div id="view-success" class="view">
-    <div class="success">
-      <div class="check">🎉</div>
-      <h2>Thank you!</h2>
-      <p>Your reservation request and payment claim have been received.<br>
-         We're verifying the transaction — you'll get a confirmation here shortly.</p>
-      <div class="info-card">
-        <div class="row-line"><span>Tour</span><span id="c-tour">—</span></div>
-        <div class="row-line"><span>Date</span><span id="c-date">—</span></div>
-        <div class="row-line"><span>Adults</span><span id="c-adults">—</span></div>
-        <div class="row-line"><span>Kids</span><span id="c-kids">—</span></div>
-        <div class="row-line"><span>Total</span><span id="c-total">—</span></div>
-        <div class="row-line"><span>Paid now</span><span id="c-deposit">—</span></div>
-        <div class="row-line"><span>Cash at end</span><span id="c-cash">—</span></div>
-      </div>
-      <p style="font-size:12px;color:var(--muted);margin-top:20px;">
-        You can close this window. We'll message you on Telegram.
-      </p>
     </div>
   </div>
 
@@ -343,26 +238,22 @@
       } catch (e) {}
     }
 
-    var WALLET = "TXyLSieukEaJ4SAt4xc1W4NSZdqiWdpriH";
-    WALLET = "TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH";
+    var WALLET = "TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH";
+    var BOT_USER = "Atsab_bot";  // <-- tu bot
     var selectedTour = null;
     var lastBooking = null;
 
     function el(id) { return document.getElementById(id); }
-
     function setDbg(msg, color) {
       var d = el('debug-bar');
       d.textContent = msg;
       if (color) d.style.background = color;
     }
 
-    // Diagnóstico inicial
     setDbg(
       'Tg:' + (typeof window.Telegram) +
-      ' | WebApp:' + (window.Telegram && window.Telegram.WebApp ? 'OK' : 'NULL') +
       ' | tg:' + (tg ? 'OK' : 'NULL') +
-      ' | v:' + (tg && tg.version ? tg.version : '?') +
-      ' | initData:' + (tg && tg.initData ? 'SÍ' : 'NO'),
+      ' | v:' + (tg && tg.version ? tg.version : '?'),
       '#c00'
     );
 
@@ -372,9 +263,7 @@
         (function(card) {
           card.addEventListener('click', function() {
             var all = document.querySelectorAll('.tour-card');
-            for (var j = 0; j < all.length; j++) {
-              all[j].classList.remove('selected');
-            }
+            for (var j = 0; j < all.length; j++) all[j].classList.remove('selected');
             card.classList.add('selected');
             selectedTour = {
               name: card.getAttribute('data-tour'),
@@ -394,10 +283,10 @@
       var adults = parseInt(el('adults').value) || 0;
       var kids = parseInt(el('kids').value) || 0;
       var btn = el('btn-continue');
-
       var kh = el('kids-hint');
+
       if (selectedTour && selectedTour.type === 'per-person' && kids > 0) {
-        kh.textContent = '🧒 Kids save $' + (kids * selectedTour.price / 2).toFixed(2) + ' with the 50% discount';
+        kh.textContent = '🧒 Kids save $' + (kids * selectedTour.price / 2).toFixed(2);
       } else {
         kh.textContent = '';
       }
@@ -410,8 +299,8 @@
     function goToPayment() {
       var adults = parseInt(el('adults').value) || 0;
       var kids = parseInt(el('kids').value) || 0;
-
       var total = 0, adultsSubtotal = 0, kidsSubtotal = 0;
+
       if (selectedTour.type === 'per-person') {
         adultsSubtotal = adults * selectedTour.price;
         kidsSubtotal = kids * (selectedTour.price / 2);
@@ -439,79 +328,52 @@
       };
 
       el('s-tour').textContent = '🐎 ' + selectedTour.name;
-      if (selectedTour.type === 'per-person') {
-        el('s-adults').textContent = '👤 ' + adults + ' adult' + (adults !== 1 ? 's' : '') + ' × $' + selectedTour.price + ' = $' + adultsSubtotal.toFixed(2);
-        if (kids > 0) {
-          el('s-kids').style.display = 'flex';
-          el('s-kids').textContent = '🧒 ' + kids + ' kid' + (kids !== 1 ? 's' : '') + ' × $' + (selectedTour.price / 2).toFixed(2) + ' = $' + kidsSubtotal.toFixed(2);
-        } else {
-          el('s-kids').style.display = 'none';
-        }
-      } else {
-        el('s-adults').textContent = '🐴 Private rental (fixed price)';
-        el('s-kids').style.display = 'none';
+      el('s-adults').textContent = '👤 ' + adults + ' adults × $' + selectedTour.price;
+      if (kids > 0) {
+        el('s-kids').style.display = 'flex';
+        el('s-kids').textContent = '🧒 ' + kids + ' kids';
       }
       el('s-total').textContent = '$' + total.toFixed(2);
-      el('s-label-now').textContent = '💎 Deposit now (USDT) — ' + selectedTour.deposit + '%';
+      el('s-label-now').textContent = '💎 Deposit (' + selectedTour.deposit + '%)';
       el('s-deposit').textContent = '$' + deposit.toFixed(2);
       el('s-cash').textContent = '$' + cash.toFixed(2);
-
-      el('p-amount').innerHTML = deposit.toFixed(2) + ' <small>USDT</small>';
-      el('p-usd').textContent = '≈ $' + deposit.toFixed(2) + ' USD';
-      el('p-address').textContent = WALLET;
+      el('p-amount').innerHTML = deposit.toFixed(2) + ' <small style="font-size:16px;">USDT</small>';
 
       el('view-form').classList.remove('active');
       el('view-payment').classList.add('active');
       window.scrollTo(0, 0);
     }
 
-    // ============================================================
-    // FUNCIÓN DE TEST: prueba sendData paso a paso
-    // ============================================================
-function paymentSent() {
-  var dbg = document.getElementById('debug-bar');
-  dbg.textContent = 'Intentando abrir chat...';
-  dbg.style.background = '#0a0';
+    function paymentSent() {
+      var dbg = el('debug-bar');
+      dbg.textContent = 'Abriendo chat del bot...';
+      dbg.style.background = '#0a0';
 
-  var botUser = 'Atsab_bot';  // <-- CAMBIA ESTO
-  var url = 'https://t.me/' + botUser + '?text=' + encodeURIComponent('TEST desde Mini App');
+      // Construir mensaje codificado con los datos de la reserva
+      var msg = 'RESERVA:' + JSON.stringify(lastBooking);
+      var url = 'https://t.me/' + BOT_USER + '?text=' + encodeURIComponent(msg);
 
-  try {
-    if (tg && typeof tg.openTelegramLink === 'function') {
-      tg.openTelegramLink(url);
-      dbg.textContent = 'openTelegramLink LLAMADO';
-    } else {
-      window.open(url, '_blank');
-      dbg.textContent = 'window.open LLAMADO';
-    }
-  } catch (e) {
-    dbg.textContent = 'ERROR: ' + e.message;
-  }
-}
-    function copyWallet() {
-      var done = function() {
-        var b = el('btn-copy-1');
-        b.textContent = '✅ Copied!';
-        setTimeout(function() { b.textContent = '📋 Copy address'; }, 1500);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(WALLET).then(done).catch(function() {
-          legacyCopy(); done();
-        });
-      } else {
-        legacyCopy(); done();
+      try {
+        if (tg && typeof tg.openTelegramLink === 'function') {
+          tg.openTelegramLink(url);
+          dbg.textContent = 'openTelegramLink OK — revisa el chat';
+        } else {
+          window.open(url, '_blank');
+          dbg.textContent = 'window.open OK — revisa el chat';
+        }
+      } catch (e) {
+        dbg.textContent = 'ERROR: ' + e.message;
+        dbg.style.background = '#c00';
       }
     }
 
-    function legacyCopy() {
-      var temp = document.createElement('textarea');
-      temp.value = WALLET;
-      temp.style.position = 'fixed';
-      temp.style.opacity = '0';
-      document.body.appendChild(temp);
-      temp.select();
-      try { document.execCommand('copy'); } catch (e) {}
-      document.body.removeChild(temp);
+    function copyWallet() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(WALLET);
+      }
+      var b = el('btn-copy-1');
+      b.textContent = '✅ Copied!';
+      setTimeout(function() { b.textContent = '📋 Copy address'; }, 1500);
     }
 
     function init() {
@@ -519,10 +381,9 @@ function paymentSent() {
       el('btn-continue').addEventListener('click', goToPayment);
       el('btn-sent').addEventListener('click', paymentSent);
       el('btn-copy-1').addEventListener('click', copyWallet);
-      var inputs = ['adults', 'kids', 'name', 'date'];
-      for (var k = 0; k < inputs.length; k++) {
-        el(inputs[k]).addEventListener('input', validateForm);
-      }
+      ['adults','kids','name','date'].forEach(function(id) {
+        el(id).addEventListener('input', validateForm);
+      });
     }
 
     if (document.readyState === 'loading') {
