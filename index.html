@@ -16,7 +16,13 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg); color: var(--text);
-      min-height: 100vh; padding-bottom: 90px; font-size: 15px; line-height: 1.5;
+      min-height: 100vh; padding-bottom: 90px; padding-top: 60px; font-size: 15px; line-height: 1.5;
+    }
+    #debug-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: #c00; color: #fff; padding: 6px 8px;
+      font-size: 11px; line-height: 1.3; z-index: 99999;
+      text-align: center; word-break: break-all;
     }
     .header {
       background: linear-gradient(135deg, #ff8a3d 0%, #ffb547 100%);
@@ -154,9 +160,9 @@
   </style>
 </head>
 <body>
-<div id="debug-bar" style="position:fixed;top:0;left:0;right:0;background:#c00;color:#fff;padding:6px;font-size:11px;z-index:99999;text-align:center;">
-  Cargando diagnóstico...
-</div>
+
+  <div id="debug-bar">Esperando...</div>
+
   <!-- VIEW 1: FORM -->
   <div id="view-form" class="view active">
     <div class="header">
@@ -337,11 +343,28 @@
       } catch (e) {}
     }
 
-    var WALLET = "TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH";
+    var WALLET = "TXyLSieukEaJ4SAt4xc1W4NSZdqiWdpriH";
+    WALLET = "TXYLSieukEaJ4SAt4xc1W4NSZdqiWdpriH";
     var selectedTour = null;
     var lastBooking = null;
 
     function el(id) { return document.getElementById(id); }
+
+    function setDbg(msg, color) {
+      var d = el('debug-bar');
+      d.textContent = msg;
+      if (color) d.style.background = color;
+    }
+
+    // Diagnóstico inicial
+    setDbg(
+      'Tg:' + (typeof window.Telegram) +
+      ' | WebApp:' + (window.Telegram && window.Telegram.WebApp ? 'OK' : 'NULL') +
+      ' | tg:' + (tg ? 'OK' : 'NULL') +
+      ' | v:' + (tg && tg.version ? tg.version : '?') +
+      ' | initData:' + (tg && tg.initData ? 'SÍ' : 'NO'),
+      '#c00'
+    );
 
     function setupTourCards() {
       var cards = document.querySelectorAll('.tour-card');
@@ -383,34 +406,7 @@
       btn.disabled = !ok;
       btn.textContent = !selectedTour ? 'Select a tour to continue' : 'Continue to payment';
     }
-function paymentSent() {
-  var dbg = document.getElementById('debug-bar');
-  var payload = JSON.stringify(lastBooking);
-  var info = [];
 
-  info.push('tg:' + (tg ? 'OK' : 'null'));
-  info.push('sendData:' + (tg && typeof tg.sendData === 'function' ? 'fn' : 'NO'));
-  info.push('proxy:' + (typeof window.TelegramWebviewProxy !== 'undefined' ? 'OK' : 'NO'));
-  info.push('bytes:' + payload.length);
-
-  try {
-    if (tg && typeof tg.sendData === 'function') {
-      // PRUEBA 1: primero un texto simple
-      tg.sendData('TEST_123');
-      info.push('simple:OK');
-    } else {
-      info.push('simple:SKIP');
-    }
-  } catch (e) {
-    info.push('simple:ERR=' + e.message);
-  }
-
-  dbg.textContent = info.join(' | ');
-  dbg.style.background = '#0a0';
-  return;  // <- detiene aquí para ver el resultado
-
-  // El resto del código original queda abajo, no se ejecutará en esta prueba
-      }
     function goToPayment() {
       var adults = parseInt(el('adults').value) || 0;
       var kids = parseInt(el('kids').value) || 0;
@@ -469,9 +465,34 @@ function paymentSent() {
       window.scrollTo(0, 0);
     }
 
-<div id="debug-bar" style="position:fixed;top:0;left:0;right:0;background:#c00;color:#fff;padding:6px;font-size:11px;z-index:99999;text-align:center;">
-  Cargando diagnóstico...
-</div>
+    // ============================================================
+    // FUNCIÓN DE TEST: prueba sendData paso a paso
+    // ============================================================
+    function paymentSent() {
+      var info = [];
+
+      info.push('tg:' + (tg ? 'OK' : 'NULL'));
+      info.push('fn:' + (tg && typeof tg.sendData === 'function' ? 'SÍ' : 'NO'));
+      info.push('proxy:' + (typeof window.TelegramWebviewProxy !== 'undefined' ? 'SÍ' : 'NO'));
+
+      // PRUEBA: enviar solo un string simple
+      var testResult = 'no-intentado';
+      try {
+        if (tg && typeof tg.sendData === 'function') {
+          tg.sendData('TEST_123');
+          testResult = 'LLAMADO-OK';
+        } else {
+          testResult = 'SIN-FUNCION';
+        }
+      } catch (e) {
+        testResult = 'ERROR:' + (e && e.message ? e.message : 'unknown');
+      }
+      info.push('sendData:' + testResult);
+
+      // Mostrar en la barra verde
+      setDbg(info.join(' | '), '#0a0');
+    }
+
     function copyWallet() {
       var done = function() {
         var b = el('btn-copy-1');
@@ -508,19 +529,7 @@ function paymentSent() {
         el(inputs[k]).addEventListener('input', validateForm);
       }
     }
-// ===== DIAGNÓSTICO =====
-var dbg = document.getElementById('debug-bar');
-var info = [];
-info.push('Telegram:' + (typeof window.Telegram));
-info.push('WebApp:' + (window.Telegram && window.Telegram.WebApp ? 'OK' : 'NULL'));
-info.push('tg:' + (tg ? 'OK' : 'NULL'));
-if (tg) {
-  info.push('platform:' + (tg.platform || '?'));
-  info.push('version:' + (tg.version || '?'));
-  info.push('initData:' + (tg.initData ? 'SÍ' : 'NO'));
-}
-dbg.textContent = info.join(' | ');
-// ===== FIN DIAGNÓSTICO =====
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
