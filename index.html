@@ -468,31 +468,26 @@
     // ============================================================
     // FUNCIÓN DE TEST: prueba sendData paso a paso
     // ============================================================
-    function paymentSent() {
-      var info = [];
+function paymentSent() {
+  var dbg = document.getElementById('debug-bar');
+  dbg.textContent = 'Intentando abrir chat...';
+  dbg.style.background = '#0a0';
 
-      info.push('tg:' + (tg ? 'OK' : 'NULL'));
-      info.push('fn:' + (tg && typeof tg.sendData === 'function' ? 'SÍ' : 'NO'));
-      info.push('proxy:' + (typeof window.TelegramWebviewProxy !== 'undefined' ? 'SÍ' : 'NO'));
+  var botUser = 'TU_BOT_USERNAME_AQUI';  // <-- CAMBIA ESTO
+  var url = 'https://t.me/' + botUser + '?text=' + encodeURIComponent('TEST desde Mini App');
 
-      // PRUEBA: enviar solo un string simple
-      var testResult = 'no-intentado';
-      try {
-        if (tg && typeof tg.sendData === 'function') {
-          tg.sendData('TEST_123');
-          testResult = 'LLAMADO-OK';
-        } else {
-          testResult = 'SIN-FUNCION';
-        }
-      } catch (e) {
-        testResult = 'ERROR:' + (e && e.message ? e.message : 'unknown');
-      }
-      info.push('sendData:' + testResult);
-
-      // Mostrar en la barra verde
-      setDbg(info.join(' | '), '#0a0');
+  try {
+    if (tg && typeof tg.openTelegramLink === 'function') {
+      tg.openTelegramLink(url);
+      dbg.textContent = 'openTelegramLink LLAMADO';
+    } else {
+      window.open(url, '_blank');
+      dbg.textContent = 'window.open LLAMADO';
     }
-
+  } catch (e) {
+    dbg.textContent = 'ERROR: ' + e.message;
+  }
+}
     function copyWallet() {
       var done = function() {
         var b = el('btn-copy-1');
