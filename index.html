@@ -442,29 +442,9 @@
       window.scrollTo(0, 0);
     }
 
-    function paymentSent() {
-      lastBooking.status = 'payment_claimed';
-      lastBooking.claimed_at = new Date().toISOString();
-
-      if (tg && tg.sendData) {
-        tg.sendData(JSON.stringify(lastBooking));
-      } else {
-        console.log('Booking (web mode):', lastBooking);
-      }
-
-      el('c-tour').textContent = lastBooking.tour;
-      el('c-date').textContent = lastBooking.date;
-      el('c-adults').textContent = lastBooking.adults;
-      el('c-kids').textContent = lastBooking.kids;
-      el('c-total').textContent = '$' + lastBooking.total.toFixed(2);
-      el('c-deposit').textContent = '$' + lastBooking.deposit_amount.toFixed(2) + ' USDT';
-      el('c-cash').textContent = '$' + lastBooking.cash_amount.toFixed(2);
-
-      el('view-payment').classList.remove('active');
-      el('view-success').classList.add('active');
-      window.scrollTo(0, 0);
-    }
-
+<div id="debug-bar" style="position:fixed;top:0;left:0;right:0;background:#c00;color:#fff;padding:6px;font-size:11px;z-index:99999;text-align:center;">
+  Cargando diagnóstico...
+</div>
     function copyWallet() {
       var done = function() {
         var b = el('btn-copy-1');
