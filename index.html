@@ -383,7 +383,34 @@
       btn.disabled = !ok;
       btn.textContent = !selectedTour ? 'Select a tour to continue' : 'Continue to payment';
     }
+function paymentSent() {
+  var dbg = document.getElementById('debug-bar');
+  var payload = JSON.stringify(lastBooking);
+  var info = [];
 
+  info.push('tg:' + (tg ? 'OK' : 'null'));
+  info.push('sendData:' + (tg && typeof tg.sendData === 'function' ? 'fn' : 'NO'));
+  info.push('proxy:' + (typeof window.TelegramWebviewProxy !== 'undefined' ? 'OK' : 'NO'));
+  info.push('bytes:' + payload.length);
+
+  try {
+    if (tg && typeof tg.sendData === 'function') {
+      // PRUEBA 1: primero un texto simple
+      tg.sendData('TEST_123');
+      info.push('simple:OK');
+    } else {
+      info.push('simple:SKIP');
+    }
+  } catch (e) {
+    info.push('simple:ERR=' + e.message);
+  }
+
+  dbg.textContent = info.join(' | ');
+  dbg.style.background = '#0a0';
+  return;  // <- detiene aquí para ver el resultado
+
+  // El resto del código original queda abajo, no se ejecutará en esta prueba
+      }
     function goToPayment() {
       var adults = parseInt(el('adults').value) || 0;
       var kids = parseInt(el('kids').value) || 0;
