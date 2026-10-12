@@ -154,7 +154,9 @@
   </style>
 </head>
 <body>
-
+<div id="debug-bar" style="position:fixed;top:0;left:0;right:0;background:#c00;color:#fff;padding:6px;font-size:11px;z-index:99999;text-align:center;">
+  Cargando diagnóstico...
+</div>
   <!-- VIEW 1: FORM -->
   <div id="view-form" class="view active">
     <div class="header">
@@ -499,7 +501,19 @@
         el(inputs[k]).addEventListener('input', validateForm);
       }
     }
-
+// ===== DIAGNÓSTICO =====
+var dbg = document.getElementById('debug-bar');
+var info = [];
+info.push('Telegram:' + (typeof window.Telegram));
+info.push('WebApp:' + (window.Telegram && window.Telegram.WebApp ? 'OK' : 'NULL'));
+info.push('tg:' + (tg ? 'OK' : 'NULL'));
+if (tg) {
+  info.push('platform:' + (tg.platform || '?'));
+  info.push('version:' + (tg.version || '?'));
+  info.push('initData:' + (tg.initData ? 'SÍ' : 'NO'));
+}
+dbg.textContent = info.join(' | ');
+// ===== FIN DIAGNÓSTICO =====
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
