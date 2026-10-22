@@ -1468,9 +1468,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()python -m py_compile bot.py
-python -m py_compile bot.py
-git add bot.py
-git commit -m "Sintaxis corregida"
-git push origin main
-git log -1
+        main()
