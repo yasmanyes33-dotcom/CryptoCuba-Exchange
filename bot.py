@@ -1001,8 +1001,6 @@ async def kids_chosen(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]),
     )
     return DATE
-
-
 async def back_to_kids(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -1027,7 +1025,6 @@ async def back_to_kids(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=InlineKeyboardMarkup(keyboard),
     )
     return KIDS
-
 
 async def date_received(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (update.message.text or "").strip()
